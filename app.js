@@ -5,6 +5,17 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 const app = express();
 
+app.use((req, res, next) => {
+	res.setHeader("Access-Control-Allow-Origin", "https://mkb-webapp.vercel.app");
+	res.setHeader("Access-Control-Allow-Methods", "GET");
+	res.setHeader(
+		"Access-Control-Allow-Headers",
+		"X-Requested-With,content-type"
+	);
+	res.setHeader("Access-Control-Allow-Credentials", "true"); // Fix: pass string "true" instead of boolean true
+	next();
+});
+
 app.get("/", (req, res) => {
 	res.send("Bienvenue sur votre backend avec Express!");
 });
