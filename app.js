@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 const app = express();
 
 app.use((req, res, next) => {
-	res.setHeader("Access-Control-Allow-Origin", "https://mkb-webapp.vercel.app");
+	res.setHeader("Access-Control-Allow-Origin", "*");
 	res.setHeader("Access-Control-Allow-Methods", "GET");
 	res.setHeader(
 		"Access-Control-Allow-Headers",
