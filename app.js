@@ -2,10 +2,9 @@ import express from "express";
 import fetch from "node-fetch";
 import { parseString } from "xml2js";
 import bodyParser from "body-parser";
+import dotenv from "dotenv";
 const app = express();
-const port = 3000; // Choisissez le port que vous préférez
 
-// Votre code Express ici
 app.get("/", (req, res) => {
 	res.send("Bienvenue sur votre backend avec Express!");
 });
@@ -19,13 +18,11 @@ app.get("/api", async (req, res) => {
 
 		console.log("Avant la requête Fetch côté serveur");
 
-		// Vérifiez si apiUrl est défini avant de faire la requête
 		if (apiUrl) {
 			const response = await fetch(apiUrl);
 
 			console.log("Après la requête Fetch côté serveur");
 
-			// Reste du code inchangé
 			if (response.ok) {
 				const xmlData = await response.text();
 				parseString(xmlData, (err, result) => {
@@ -52,17 +49,17 @@ app.get("/api", async (req, res) => {
 			res.status(500).send("apiUrl n'est pas défini");
 		}
 	} catch (error) {
-		// Log en cas d'erreur lors de la requête
 		console.error("Erreur lors de la requête Fetch côté serveur:", error);
 
-		// Renvoyez un message d'erreur comme réponse
 		res.status(500).send("Erreur serveur");
 	}
 });
 
-app.listen(port, () => {
-	console.log(`Le serveur écoute sur le port ${port}`);
+dotenv.config();
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+	console.log(`Le serveur écoute sur le port ${PORT}`);
 });
 
-// Utilisez le middleware body-parser
-app.use(bodyParser.json());
+// // Utilisez le middleware body-parser
+// app.use(bodyParser.json());
