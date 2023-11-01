@@ -1,7 +1,6 @@
 import express from "express";
 import fetch from "node-fetch";
 import { parseString } from "xml2js";
-import bodyParser from "body-parser";
 import dotenv from "dotenv";
 const app = express();
 
@@ -24,8 +23,7 @@ app.get("/api", async (req, res) => {
 	try {
 		console.log("Début de la requête");
 
-		const apiUrl =
-			"https://www.spider-vo.net/api/42446d400a51005224542150225b07590b56104a3072172e3d3a042b090a05760158135e0b";
+		const apiUrl = process.env.SPIDERVO_API_URL;
 
 		console.log("Avant la requête Fetch côté serveur");
 
