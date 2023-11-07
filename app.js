@@ -21,53 +21,40 @@ app.get("/", (req, res) => {
 
 app.get("/api", async (req, res) => {
 	try {
-		console.log("Début de la requête");
-
 		const apiUrl = process.env.SPIDERVO_API_URL;
-
-		console.log("Avant la requête Fetch côté serveur");
 
 		if (apiUrl) {
 			const response = await fetch(apiUrl);
-
-			console.log("Après la requête Fetch côté serveur");
 
 			if (response.ok) {
 				const xmlData = await response.text();
 				parseString(xmlData, (err, result) => {
 					if (err) {
-						console.error("Erreur lors de la conversion XML vers JSON:", err);
-						res.status(500).send("Erreur lors de la conversion XML vers JSON");
+						console.error("Error converting XML to JSON:", err);
+						res.status(500).send("Error converting XML to JSON:");
 					} else {
-						console.log("Données récupérées:", result);
 						res.json(result);
 					}
 				});
 			} else {
-				console.error(
-					"Erreur de réponse:",
-					response.status,
-					response.statusText
-				);
-				res
-					.status(response.status)
-					.send("Erreur lors de la requête Fetch côté serveur");
+				console.error("Wrong response:", response.status, response.statusText);
+				res.status(response.status).send("Server-side Fetch request error");
 			}
 		} else {
-			console.error("apiUrl n'est pas défini");
-			res.status(500).send("apiUrl n'est pas défini");
+			console.error("apiUrl is not defined");
+			res.status(500).send("apiUrl is not defined");
 		}
 	} catch (error) {
-		console.error("Erreur lors de la requête Fetch côté serveur:", error);
+		console.error("Server-side Fetch request error", error);
 
-		res.status(500).send("Erreur serveur");
+		res.status(500).send("Erreur server");
 	}
 });
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-	console.log(`Le serveur écoute sur le port ${PORT}`);
+	console.log(`The server listens on port ${PORT}`);
 });
 
 // // Utilisez le middleware body-parser
