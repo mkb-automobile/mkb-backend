@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api", async (req, res) => {
+	res.setHeader("Cache-control", "public, max-age=86400");
 	try {
 		const apiUrl = process.env.SPIDERVO_API_URL;
 
