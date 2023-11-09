@@ -16,7 +16,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-	res.send("Bienvenue sur votre backend avec Express! 🚀");
+	res.send("Bienvenue sur le backend avec Express de l'app MKB-Automobile! 🚀");
 });
 
 app.get("/api", async (req, res) => {
