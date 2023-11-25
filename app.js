@@ -1,7 +1,9 @@
 import express from "express";
 import fetch from "node-fetch";
+import nodemailer from "nodemailer";
 import { parseString } from "xml2js";
 import dotenv from "dotenv";
+import bodyParser from "body-parser";
 const app = express();
 
 app.use((req, res, next) => {
@@ -53,14 +55,21 @@ app.get("/api", async (req, res) => {
 
 			if (response.ok) {
 				const xmlData = await response.text();
-				parseString(xmlData, (err, result) => {
-					if (err) {
-						console.error("Error converting XML to JSON:", err);
-						res.status(500).send("Error converting XML to JSON:");
-					} else {
-						res.json(result);
+
+				parseString(
+					xmlData,
+					{ trim: true, explicitArray: false },
+					(err, result) => {
+						if (err) {
+							console.error("Error converting XML to JSON:", err);
+							res.status(500).send("Error converting XML to JSON:");
+						} else {
+							const cars = result.vehicules.vehicule;
+							console.log(result.vehicules.vehicule);
+							res.json(cars);
+						}
 					}
-				});
+				);
 			} else {
 				console.error("Wrong response:", response.status, response.statusText);
 				res.status(response.status).send("Server-side Fetch request error");
@@ -73,6 +82,55 @@ app.get("/api", async (req, res) => {
 		console.error("Server-side Fetch request error", error);
 
 		res.status(500).send("Erreur server");
+	}
+});
+
+app.use(bodyParser.json());
+
+app.post("/api/sendcontactform", async (req, res) => {
+	console.log(req.body);
+	if (req.method === "POST") {
+		const { name, firstName, email, phone, marque, modele, refCar, message } =
+			req.body;
+		console.log(req.body);
+
+		const transporter = nodemailer.createTransport({
+			service: "gmail",
+			auth: {
+				user: "a.cazimira@gmail.com",
+				pass: "qwh8w66c",
+			},
+		});
+
+		const mailData = {
+			from: "a.cazimira@gmail.com",
+			to: "contact.mkb04@gmail.com",
+			subject: `Nouveau message de ${name} ${firstName}`,
+			text: `Nom: ${name} \n Prénom: ${firstName} \n Email: ${email} \n Téléphone: ${phone} \n Marque: ${marque} \n Modèle: ${modele} \n Référence: ${refCar} \n Message: ${message}`,
+			html: `<div>
+	            <p>Nom: ${name}</p>
+	            <p>Prénom: ${firstName}</p>
+	            <p>Email: ${email}</p>
+	            <p>Téléphone: ${phone}</p>
+	            <p>Marque: ${marque}</p>
+	            <p>Modèle: ${modele}</p>
+	            <p>Référence: ${refCar}</p>
+	            <p>Message: ${message}</p>
+	          </div>`,
+		};
+
+		try {
+			const info = await transporter.sendMail(mailData);
+			console.log("Email sent successfully", info);
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({ status: "Erreur lors de l'envoi de l'e-mail" });
+			return;
+		}
+
+		res.status(200).json({ status: "Ok" });
+	} else {
+		res.status(405).json({ status: "Méthode non autorisée" });
 	}
 });
 
