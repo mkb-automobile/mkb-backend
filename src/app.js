@@ -1,5 +1,5 @@
 import express from "express";
-import { apiInfo } from "./constant/index.js";
+import apiInfo from "./constant/index.js";
 
 const app = express();
 

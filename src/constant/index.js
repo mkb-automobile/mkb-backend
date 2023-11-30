@@ -1,4 +1,4 @@
-export const apiInfo = `
+const apiInfo = `
     <h1>Bienvenue sur l'API MKB-Automobile! 🚗</h1>
 
     <p>Endpoints disponibles :</p>
@@ -21,3 +21,5 @@ export const apiInfo = `
     <p>Pour plus d'informations, rendez-vous sur le repo GitHub :</p>
     <a href="https://github.com/mkb-automobile/mkb-backend" target="_blank">GitHub Repo</a>
   `;
+
+export default apiInfo;
