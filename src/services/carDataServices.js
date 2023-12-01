@@ -24,7 +24,6 @@ const carDataServices = {
 										reject("Error converting XML to JSON");
 									} else {
 										const cars = result.vehicules.vehicule;
-										console.log(result.vehicules.vehicule);
 										resolve(cars);
 									}
 								}
